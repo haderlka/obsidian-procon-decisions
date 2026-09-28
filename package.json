@@ -1,0 +1,34 @@
+{
+  "name": "procon-decisions",
+  "version": "1.0.0",
+  "description": "Obsidian plugin: weigh pro and contra arguments in a Markdown table and see which side wins.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "lint": "eslint .",
+    "test": "node --test \"tests/*.test.ts\"",
+    "version": "node version-bump.mjs && git add manifest.json versions.json",
+    "screenshots": "node tools/screenshots/shoot.mjs"
+  },
+  "keywords": [
+    "obsidian-plugin",
+    "decision",
+    "pros-and-cons",
+    "markdown-table"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@eslint/json": "^0.14.0",
+    "@types/node": "^20.0.0",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.39.5",
+    "eslint-plugin-obsidianmd": "^0.4.2",
+    "obsidian": "1.8.7",
+    "tslib": "^2.6.0",
+    "typescript": "^5.4.0",
+    "typescript-eslint": "^8.70.1"
+  },
+  "author": "torobidum"
+}

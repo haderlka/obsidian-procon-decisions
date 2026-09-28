@@ -1,0 +1,834 @@
+/* ───────────────────────── Pro/Con Decisions ───────────────────────── */
+
+.procon {
+	--pc-pro: var(--color-green);
+	--pc-pro-rgb: var(--color-green-rgb);
+	--pc-con: var(--color-red);
+	--pc-con-rgb: var(--color-red-rgb);
+	--pc-radius: 16px;
+	--pc-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+	--pc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+	container-type: inline-size;
+	position: relative;
+	margin: 0.5em 0;
+	padding: 18px 18px 16px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--pc-radius);
+	background:
+		radial-gradient(90% 70% at 0% 0%, rgba(var(--pc-pro-rgb), 0.08), transparent 65%),
+		radial-gradient(90% 70% at 100% 0%, rgba(var(--pc-con-rgb), 0.08), transparent 65%),
+		var(--background-primary);
+	font-size: var(--font-text-size);
+	line-height: 1.4;
+	text-align: left;
+	white-space: normal;
+}
+
+.procon.is-intro {
+	animation: pc-rise 0.5s var(--pc-ease) both;
+}
+
+/* Live Preview wrapper: drop the code block chrome */
+.markdown-source-view.mod-cm6 .cm-embed-block.cm-lang-procon,
+.block-language-procon {
+	background: transparent;
+	padding: 0;
+}
+
+/* ── Editable text (title + arguments) ── */
+
+.procon [contenteditable="plaintext-only"],
+.procon [contenteditable="true"] {
+	cursor: text;
+	outline: none;
+}
+
+.procon [contenteditable]:hover {
+	background-color: var(--background-modifier-hover);
+}
+
+.procon [contenteditable]:focus {
+	background-color: var(--background-primary);
+	box-shadow: 0 0 0 2px var(--background-modifier-border-focus);
+}
+
+.procon .procon-text:empty::before {
+	content: attr(data-placeholder);
+	color: var(--text-faint);
+	font-weight: 400;
+}
+
+/* ── Columns ── */
+
+.procon-columns {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 14px;
+}
+
+@container (max-width: 560px) {
+	.procon-columns {
+		grid-template-columns: 1fr;
+	}
+}
+
+.procon-col {
+	--pc-side: var(--pc-pro);
+	--pc-side-rgb: var(--pc-pro-rgb);
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	min-width: 0;
+	padding: 12px;
+	border-radius: 12px;
+	background: rgba(var(--pc-side-rgb), 0.04);
+	border: 1px solid rgba(var(--pc-side-rgb), 0.14);
+}
+
+.procon-col-con {
+	--pc-side: var(--pc-con);
+	--pc-side-rgb: var(--pc-con-rgb);
+}
+
+.procon-col-head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 0 2px 4px;
+	color: var(--pc-side);
+	font-size: 0.78em;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.procon-col-icon {
+	display: grid;
+	place-items: center;
+}
+
+.procon-col-icon svg {
+	width: 16px;
+	height: 16px;
+}
+
+.procon-col-count {
+	min-width: 20px;
+	padding: 1px 7px;
+	border-radius: 999px;
+	text-align: center;
+	background: rgba(var(--pc-side-rgb), 0.15);
+	letter-spacing: 0;
+}
+
+.procon-col-sum {
+	margin-left: auto;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0;
+	opacity: 0.85;
+}
+
+.procon-list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-height: 8px;
+	border-radius: 10px;
+	transition: box-shadow 0.15s ease;
+}
+
+.procon-list.is-drop-end {
+	box-shadow: inset 0 -3px 0 -1px var(--pc-side);
+}
+
+.procon-empty {
+	padding: 10px;
+	border: 1px dashed rgba(var(--pc-side-rgb), 0.3);
+	border-radius: 10px;
+	color: var(--text-faint);
+	font-size: 0.88em;
+	text-align: center;
+	font-style: italic;
+}
+
+/* ── Argument card ── */
+
+.procon-item {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 10px 8px 18px;
+	border-radius: 10px;
+	background: var(--background-primary);
+	border: 1px solid rgba(var(--pc-side-rgb), 0.2);
+	border-left: 3px solid var(--pc-side);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+	transition:
+		transform 0.2s var(--pc-ease),
+		box-shadow 0.2s var(--pc-ease),
+		opacity 0.2s ease;
+}
+
+@media (hover: hover) {
+	.procon-item:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 6px 16px -8px rgba(var(--pc-side-rgb), 0.45);
+	}
+}
+
+.procon-item-con {
+	--pc-side: var(--pc-con);
+	--pc-side-rgb: var(--pc-con-rgb);
+}
+
+.procon-item.is-dragging {
+	z-index: 10;
+	opacity: 0.92;
+	pointer-events: none;
+	transition: none;
+	transform: translate(var(--pc-drag-x, 0), var(--pc-drag-y, 0)) !important;
+	box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.35);
+}
+
+.procon-item.is-drop-before::before {
+	content: "";
+	position: absolute;
+	left: 4px;
+	right: 4px;
+	top: -5px;
+	height: 3px;
+	border-radius: 3px;
+	background: var(--pc-side);
+	box-shadow: 0 0 8px rgba(var(--pc-side-rgb), 0.6);
+}
+
+.procon-grip {
+	position: absolute;
+	left: 1px;
+	top: 50%;
+	transform: translateY(-50%);
+	display: grid;
+	place-items: center;
+	color: var(--text-faint);
+	cursor: grab;
+	touch-action: none; /* let a finger drag the card instead of scrolling the page */
+	opacity: 0;
+	transition: opacity 0.15s ease;
+}
+
+.procon-grip svg {
+	width: 14px;
+	height: 14px;
+}
+
+.procon-item:hover .procon-grip {
+	opacity: 1;
+}
+
+.procon-text {
+	flex: 1;
+	min-width: 0;
+	padding: 2px 4px;
+	border-radius: 5px;
+	color: var(--text-normal);
+	overflow-wrap: anywhere;
+}
+
+/* ── Weight symbols ── */
+
+.procon-weight {
+	flex: none;
+	display: flex;
+	align-items: center;
+	gap: 1px;
+	padding: 2px 4px;
+	border-radius: 8px;
+	outline: none;
+	user-select: none;
+}
+
+.procon-weight:focus-visible {
+	box-shadow: 0 0 0 2px var(--background-modifier-border-focus);
+}
+
+.procon-sym {
+	display: inline-block;
+	font-size: 1.05em;
+	line-height: 1;
+	color: var(--pc-side);
+	opacity: 0.18;
+	filter: grayscale(1);
+	transition:
+		transform 0.18s var(--pc-spring),
+		opacity 0.18s ease,
+		filter 0.18s ease;
+}
+
+.procon:not(.is-readonly) .procon-sym {
+	cursor: pointer;
+}
+
+.procon-sym.is-filled {
+	opacity: 1;
+	filter: none;
+}
+
+.procon[data-symbol="star"] .procon-sym.is-filled {
+	color: var(--color-yellow);
+	text-shadow: 0 0 6px rgba(var(--color-yellow-rgb), 0.35);
+}
+
+.procon[data-symbol="heart"] .procon-sym.is-filled {
+	color: var(--color-pink, var(--color-red));
+}
+
+/* Hover preview only on devices with a real pointer — on touch, :hover sticks after a tap. */
+@media (hover: hover) {
+	.procon:not(.is-readonly) .procon-weight:hover .procon-sym {
+		opacity: 0.18;
+		filter: grayscale(1);
+	}
+
+	.procon:not(.is-readonly) .procon-weight:hover .procon-sym.is-preview {
+		opacity: 0.9;
+		filter: none;
+		transform: scale(1.18);
+	}
+}
+
+.procon-weight-num {
+	display: none;
+	margin-left: 4px;
+	font-size: 0.8em;
+	color: var(--text-muted);
+	font-variant-numeric: tabular-nums;
+}
+
+/* Narrow (phones, slim panes): text gets its own line, stars + buttons go below it */
+@container (max-width: 480px) {
+	.procon-item {
+		flex-wrap: wrap;
+		row-gap: 2px;
+	}
+	.procon-text {
+		flex: 1 1 100%;
+	}
+	.procon-weight {
+		margin-right: auto;
+		margin-left: -4px;
+	}
+}
+
+/* ── Card actions ── */
+
+.procon-actions {
+	position: absolute;
+	top: -12px;
+	right: 8px;
+	z-index: 2;
+	display: flex;
+	gap: 2px;
+	padding: 2px;
+	border-radius: 8px;
+	background: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.25);
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(4px) scale(0.95);
+	transition:
+		opacity 0.15s ease,
+		transform 0.15s ease;
+}
+
+.procon-item:hover .procon-actions,
+.procon-item:focus-within .procon-actions {
+	opacity: 1;
+	pointer-events: auto;
+	transform: none;
+}
+
+.procon .procon-btn {
+	width: 24px;
+	height: 24px;
+	padding: 0;
+	display: grid;
+	place-items: center;
+	background: transparent;
+	box-shadow: none;
+	border: none;
+	border-radius: 6px;
+	color: var(--text-muted);
+	cursor: pointer;
+}
+
+.procon .procon-btn svg {
+	width: 14px;
+	height: 14px;
+}
+
+.procon .procon-btn:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+
+.procon .procon-btn-delete:hover {
+	background: rgba(var(--pc-con-rgb), 0.15);
+	color: var(--pc-con);
+}
+
+/* Touch devices: controls always visible, inline, and finger-sized. */
+@media (hover: none) {
+	.procon-item {
+		padding-left: 24px;
+	}
+	.procon-grip {
+		opacity: 1;
+		left: 0;
+		width: 24px;
+		height: 100%;
+	}
+	.procon-actions {
+		position: static;
+		opacity: 1;
+		pointer-events: auto;
+		transform: none;
+		padding: 0;
+		background: transparent;
+		border: none;
+		box-shadow: none;
+	}
+	.procon .procon-btn {
+		width: 32px;
+		height: 32px;
+	}
+	.procon-sym {
+		font-size: 1.3em;
+		padding: 2px 1px;
+	}
+	.procon .procon-add input {
+		height: 38px;
+	}
+}
+
+/* ── Add row ── */
+
+.procon-add {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 8px;
+	border-radius: 10px;
+	border: 1px dashed rgba(var(--pc-side-rgb), 0.35);
+	color: var(--pc-side);
+	transition:
+		border-color 0.15s ease,
+		background-color 0.15s ease,
+		box-shadow 0.15s ease;
+}
+
+.procon-add:hover {
+	background: rgba(var(--pc-side-rgb), 0.06);
+}
+
+.procon-add:focus-within {
+	border-style: solid;
+	border-color: var(--pc-side);
+	background: var(--background-primary);
+	box-shadow: 0 0 0 3px rgba(var(--pc-side-rgb), 0.15);
+}
+
+.procon-add-icon {
+	display: grid;
+	place-items: center;
+}
+
+.procon-add-icon svg {
+	width: 14px;
+	height: 14px;
+}
+
+.procon .procon-add input {
+	flex: 1;
+	min-width: 0;
+	height: 30px;
+	padding: 0;
+	border: none;
+	background: transparent;
+	box-shadow: none;
+	color: var(--text-normal);
+	font-size: 0.95em;
+}
+
+.procon .procon-add input:focus,
+.procon .procon-add input:focus-visible {
+	box-shadow: none;
+	outline: none;
+}
+
+.procon .procon-add input::placeholder {
+	color: var(--text-faint);
+}
+
+/* ── Verdict ── */
+
+.procon-verdict {
+	--pc-v: var(--interactive-accent);
+	--pc-v-rgb: var(--interactive-accent-rgb, 124, 58, 237);
+	margin-top: 16px;
+	padding: 12px 16px 10px;
+	border-radius: 14px;
+	background: linear-gradient(135deg, rgba(var(--pc-v-rgb), 0.12), rgba(var(--pc-v-rgb), 0.03));
+	border: 1px solid rgba(var(--pc-v-rgb), 0.28);
+	transition:
+		background 0.4s ease,
+		border-color 0.4s ease;
+}
+
+.procon-verdict.is-strong-pro,
+.procon-verdict.is-pro {
+	--pc-v: var(--pc-pro);
+	--pc-v-rgb: var(--pc-pro-rgb);
+}
+
+.procon-verdict.is-strong-con,
+.procon-verdict.is-con {
+	--pc-v: var(--pc-con);
+	--pc-v-rgb: var(--pc-con-rgb);
+}
+
+.procon-verdict.is-empty {
+	--pc-v: var(--text-muted);
+	--pc-v-rgb: 128, 128, 128;
+}
+
+.procon-verdict.is-flipped {
+	animation: pc-verdict-flip 0.7s var(--pc-spring);
+}
+
+.procon-verdict-body {
+	flex: 1;
+	min-width: 0;
+}
+
+/* Tug-of-war meter */
+.procon-meter {
+	position: relative;
+	display: flex;
+	height: 10px;
+	border-radius: 999px;
+	overflow: hidden;
+	background: var(--background-modifier-border);
+}
+
+.procon-meter-pro,
+.procon-meter-con {
+	height: 100%;
+	transition: width 0.9s var(--pc-ease);
+}
+
+/* --pc-share (0–100) is set on .procon-meter from code */
+.procon-meter-pro {
+	width: calc(var(--pc-share, 50) * 1%);
+}
+
+.procon-meter-con {
+	width: calc((100 - var(--pc-share, 50)) * 1%);
+}
+
+.procon-meter-pro {
+	background: linear-gradient(90deg, rgba(var(--pc-pro-rgb), 0.55), var(--pc-pro));
+}
+
+.procon-meter-con {
+	background: linear-gradient(90deg, var(--pc-con), rgba(var(--pc-con-rgb), 0.55));
+}
+
+.procon-verdict.is-empty .procon-meter-pro,
+.procon-verdict.is-empty .procon-meter-con {
+	opacity: 0.25;
+}
+
+.procon-meter-legend {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 6px;
+	font-size: 0.8em;
+	font-variant-numeric: tabular-nums;
+	color: var(--text-muted);
+}
+
+.procon-legend-pro > span:first-child {
+	color: var(--pc-pro);
+	font-weight: 700;
+}
+
+.procon-legend-con > span:nth-child(2) {
+	color: var(--pc-con);
+	font-weight: 700;
+}
+
+/* ── Animations ── */
+
+.procon.is-intro .procon-item {
+	animation: pc-rise 0.45s var(--pc-ease) both;
+	animation-delay: var(--pc-delay, 0ms);
+}
+
+.procon-item.is-changed {
+	animation: pc-flash 0.9s ease-out;
+}
+
+.procon-col-pro .procon-item.is-moved {
+	animation: pc-from-right 0.55s var(--pc-spring) both, pc-glow 1.2s ease-out 0.1s;
+}
+
+.procon-col-con .procon-item.is-moved {
+	animation: pc-from-left 0.55s var(--pc-spring) both, pc-glow 1.2s ease-out 0.1s;
+}
+
+.procon-item.is-removing {
+	animation: pc-out 0.26s ease-in forwards;
+	pointer-events: none;
+}
+
+.procon-sym.is-pop {
+	animation: pc-sym-pop 0.5s var(--pc-spring) both;
+	animation-delay: var(--pc-delay, 0ms);
+}
+
+.procon-sym.is-drop {
+	animation: pc-sym-drop 0.4s ease-out;
+}
+
+@keyframes pc-rise {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes pc-from-left {
+	from {
+		opacity: 0;
+		transform: translateX(-40px) scale(0.95);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes pc-from-right {
+	from {
+		opacity: 0;
+		transform: translateX(40px) scale(0.95);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes pc-glow {
+	0% {
+		box-shadow: 0 0 0 0 rgba(var(--pc-side-rgb), 0.55);
+	}
+	100% {
+		box-shadow: 0 0 0 10px rgba(var(--pc-side-rgb), 0);
+	}
+}
+
+@keyframes pc-flash {
+	0% {
+		background: rgba(var(--pc-side-rgb), 0.28);
+	}
+	100% {
+		background: var(--background-primary);
+	}
+}
+
+@keyframes pc-out {
+	0% {
+		opacity: 1;
+		transform: none;
+		max-height: 80px;
+	}
+	100% {
+		opacity: 0;
+		transform: translateX(16px) scale(0.92);
+		max-height: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+		margin-bottom: -6px;
+	}
+}
+
+@keyframes pc-sym-pop {
+	0% {
+		transform: scale(0.3) rotate(-30deg);
+		opacity: 0.2;
+	}
+	60% {
+		transform: scale(1.45) rotate(10deg);
+	}
+	100% {
+		transform: scale(1) rotate(0);
+		opacity: 1;
+	}
+}
+
+@keyframes pc-sym-drop {
+	0% {
+		transform: scale(1.2);
+		opacity: 0.8;
+		filter: none;
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes pc-verdict-flip {
+	0% {
+		transform: scale(0.97);
+	}
+	50% {
+		transform: scale(1.015);
+	}
+	100% {
+		transform: none;
+	}
+}
+
+@keyframes pc-wiggle {
+	0% {
+		transform: rotate(0) scale(0.6);
+	}
+	40% {
+		transform: rotate(-14deg) scale(1.25);
+	}
+	70% {
+		transform: rotate(8deg);
+	}
+	100% {
+		transform: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.procon *,
+	.procon {
+		animation: none !important;
+		transition: none !important;
+	}
+}
+
+/* ───────────────────────── Plain design ───────────────────────── */
+/* Minimal color, no gradients, no shadows, no motion. */
+
+.procon.is-plain,
+.procon.is-plain * {
+	animation: none !important;
+	transition: none !important;
+}
+
+.procon.is-plain {
+	padding: 12px;
+	border-radius: 8px;
+	background: var(--background-primary);
+}
+
+.procon.is-plain .procon-col {
+	padding: 10px;
+	border-radius: 6px;
+	background: transparent;
+	border: 1px solid var(--background-modifier-border);
+}
+
+.procon.is-plain .procon-col-head {
+	color: var(--text-muted);
+}
+
+.procon.is-plain .procon-col-count {
+	background: var(--background-modifier-hover);
+}
+
+.procon.is-plain .procon-item {
+	border-radius: 6px;
+	background: transparent;
+	border: 1px solid var(--background-modifier-border);
+	box-shadow: none;
+}
+
+.procon.is-plain .procon-item:hover {
+	transform: none;
+	box-shadow: none;
+	background: var(--background-modifier-hover);
+}
+
+.procon.is-plain .procon-item.is-drop-before::before {
+	background: var(--interactive-accent);
+	box-shadow: none;
+}
+
+.procon.is-plain .procon-list.is-drop-end {
+	box-shadow: inset 0 -3px 0 -1px var(--interactive-accent);
+}
+
+.procon.is-plain .procon-sym {
+	color: var(--text-muted);
+}
+
+.procon.is-plain .procon-sym.is-filled {
+	color: var(--text-muted);
+	text-shadow: none;
+}
+
+.procon.is-plain .procon-empty {
+	border-color: var(--background-modifier-border);
+}
+
+.procon.is-plain .procon-add {
+	color: var(--text-muted);
+	border-color: var(--background-modifier-border);
+}
+
+.procon.is-plain .procon-add:hover {
+	background: transparent;
+}
+
+.procon.is-plain .procon-add:focus-within {
+	border-color: var(--background-modifier-border-focus);
+	box-shadow: none;
+}
+
+.procon.is-plain .procon-actions {
+	box-shadow: none;
+}
+
+.procon.is-plain .procon-verdict {
+	padding: 10px 12px 8px;
+	border-radius: 6px;
+	background: transparent;
+	border: 1px solid var(--background-modifier-border);
+}
+
+.procon.is-plain .procon-meter-pro {
+	background: rgba(var(--pc-pro-rgb), 0.6);
+}
+
+.procon.is-plain .procon-meter-con {
+	background: rgba(var(--pc-con-rgb), 0.6);
+}
+
+.procon.is-plain .procon-legend-pro > span:first-child,
+.procon.is-plain .procon-legend-con > span:nth-child(2) {
+	color: var(--text-normal);
+}
