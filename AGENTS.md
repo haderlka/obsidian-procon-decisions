@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Guidance for AI coding agents (and humans) working on **Pro/Con Decisions**, an Obsidian community plugin.
+Guidance for AI coding agents (and humans) working on **Pro-Con Decisions**, an Obsidian community plugin.
 
 - Repo: https://github.com/haderlka/obsidian-procon-decisions (author `haderlka`, default branch `main`)
 - Donations: `fundingUrl` in `manifest.json` → https://buymeacoffee.com/haderlka. Keep links out of the manifest `description`; the review wants a plain one-line description.
@@ -31,6 +31,8 @@ A `procon` fenced code block contains a Markdown table of weighted pro/contra ar
 | `npm run screenshots` | Regenerates the README images in `docs/` (see "Testing UI changes without Obsidian"). Run it after any visual change. |
 
 Run `lint`, `test` and `build` after every change.
+
+**Git is the user's job.** Agents must not run git commands that change the repository: no `commit`, `push`, `tag`, `merge`, `rebase`, `reset`, `checkout`/`switch`, `stash`, `add` and so on. This also rules out `npm version`, which commits and tags. Read-only commands (`status`, `diff`, `log`, `show`, `ls-remote`) are fine. When a change is ready, tell the user which commands to run.
 
 ## Layout
 
@@ -89,6 +91,7 @@ Keep `model.ts` free of Obsidian and DOM dependencies so it stays unit-testable.
 
 - `npm run lint` clean. `obsidianmd/settings-tab/prefer-setting-definitions` is disabled on purpose, because that API needs Obsidian 1.13 while `minAppVersion` is 1.4.0.
 - No `innerHTML`/`outerHTML`, no network requests, no Node/Electron APIs (`isDesktopOnly: false`).
+- `manifest.json` name: Basic Latin only, no punctuation except `-`, `+` and `()`, no "Obsidian" and no "Plugin". A `/` ("Pro/Con") was rejected by the directory, which is why the name is **Pro-Con Decisions**.
 - Command id/name must not contain the plugin id/name. No default hotkeys.
 - UI text in sentence case.
 - `manifest.json` description: short, ends with a period, doesn't start with "This plugin".

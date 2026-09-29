@@ -1,4 +1,4 @@
-# Pro/Con Decisions
+# Pro-Con Decisions
 
 Weigh the pros and cons of a decision right inside your notes. You write a plain Markdown table of arguments with weights. Obsidian shows it as editable cards and a bar that shows which side wins.
 
@@ -91,7 +91,7 @@ Every edit rewrites the table inside your note, so the Markdown always matches w
 Once the plugin is listed in the community plugin directory:
 
 1. Open **Settings → Community plugins**. If needed, click **Turn on community plugins**.
-2. Click **Browse** and search for **Pro/Con Decisions**.
+2. Click **Browse** and search for **Pro-Con Decisions**.
 3. Click **Install**, then **Enable**.
 
 ### Manual installation by downloading
@@ -113,7 +113,7 @@ Use this before the plugin is listed, or to install a specific version.
    ├── manifest.json
    └── styles.css
    ```
-5. In Obsidian, open **Settings → Community plugins**. Click the reload icon next to *Installed plugins*, then enable **Pro/Con Decisions**.
+5. In Obsidian, open **Settings → Community plugins**. Click the reload icon next to *Installed plugins*, then enable **Pro-Con Decisions**.
 
 **Updating a manual install:** download the three files from the newer release, replace the old ones, then turn the plugin off and on again (or restart Obsidian).
 

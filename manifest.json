@@ -1,6 +1,6 @@
 {
 	"id": "procon-decisions",
-	"name": "Pro/Con Decisions",
+	"name": "Pro-Con Decisions",
 	"version": "1.0.0",
 	"minAppVersion": "1.4.0",
 	"description": "Weigh pro and contra arguments in a Markdown table. Rendered as editable cards with weights and a result bar.",
