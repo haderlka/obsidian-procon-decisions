@@ -1,7 +1,7 @@
 {
   "name": "procon-decisions",
   "version": "1.0.2",
-  "description": "Obsidian plugin: weigh pro and contra arguments in a Markdown table and see which side wins.",
+  "description": "Obsidian plugin: weigh pro and con arguments in a Markdown table and see which side wins.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",

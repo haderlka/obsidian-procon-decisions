@@ -4,14 +4,14 @@ Weigh the pros and cons of a decision right inside your notes. You write a plain
 
 **Source code:** [github.com/haderlka/obsidian-procon-decisions](https://github.com/haderlka/obsidian-procon-decisions). Issues and ideas are welcome.
 
-![A decision rendered in a note: pro and contra columns with star weights and a green/red result bar](https://raw.githubusercontent.com/haderlka/obsidian-procon-decisions/main/docs/colored-light.png)
+![A decision rendered in a note: pro and con columns with star weights and a green/red result bar](https://raw.githubusercontent.com/haderlka/obsidian-procon-decisions/main/docs/colored-light.png)
 
 ## Features
 
 - **Plain Markdown underneath.** Your data is an ordinary Markdown table inside a code block. It stays readable in any editor, even without the plugin.
 - **Edit in the rendered view.** Add, rename, re-weight, move and delete arguments without touching the table syntax. This works in Live Preview and in Reading view.
 - **Weights as symbols.** Click (or tap) a star to set how much an argument counts. You can choose stars, hearts, dots, diamonds, flames or bolts.
-- **Result bar.** A green/red bar shows how the total weight splits between pro and contra.
+- **Result bar.** A green/red bar shows how the total weight splits between pro and con.
 - **Two designs.** *Colored*, with color and subtle animations, or *Plain*, which is quiet, low-color and has no animation.
 - **Works on phones and tablets.** Touch-sized controls, and a layout that stacks on narrow screens.
 

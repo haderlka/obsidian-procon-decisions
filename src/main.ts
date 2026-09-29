@@ -217,7 +217,7 @@ class DecisionRenderer extends MarkdownRenderChild {
 
 		const head = col.createDiv({ cls: "procon-col-head" });
 		setIcon(head.createSpan({ cls: "procon-col-icon" }), side === "pro" ? "thumbs-up" : "thumbs-down");
-		head.createSpan({ cls: "procon-col-label", text: side === "pro" ? "Pro" : "Contra" });
+		head.createSpan({ cls: "procon-col-label", text: side === "pro" ? "Pro" : "Con" });
 		const count = d.entries.filter((e) => e.side === side).length;
 		head.createSpan({ cls: "procon-col-count", text: `${count}` });
 		const sum = head.createSpan({ cls: "procon-col-sum" });
@@ -284,7 +284,7 @@ class DecisionRenderer extends MarkdownRenderChild {
 			const actions = card.createDiv({ cls: "procon-actions" });
 			const flip = actions.createEl("button", {
 				cls: "procon-btn clickable-icon",
-				attr: { "aria-label": e.side === "pro" ? "Move to contra" : "Move to pro" },
+				attr: { "aria-label": e.side === "pro" ? "Move to con" : "Move to pro" },
 			});
 			setIcon(flip, "arrow-left-right");
 			flip.addEventListener("click", () =>
@@ -375,7 +375,7 @@ class DecisionRenderer extends MarkdownRenderChild {
 		const r = legend.createSpan({ cls: "procon-legend-con" });
 		r.createSpan({ text: `${Math.round(100 - to)}% · ` });
 		const rNum = r.createSpan({ text: String(t.con) });
-		r.createSpan({ text: " contra" });
+		r.createSpan({ text: " con" });
 		animateNumber(lNum, prev ? prev.tally.pro : 0, t.pro);
 		animateNumber(rNum, prev ? prev.tally.con : 0, t.con);
 	}

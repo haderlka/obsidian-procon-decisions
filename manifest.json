@@ -3,7 +3,7 @@
 	"name": "Pro-Con Decisions",
 	"version": "1.0.2",
 	"minAppVersion": "1.4.0",
-	"description": "Weigh pro and contra arguments in a Markdown table. Rendered as editable cards with weights and a result bar.",
+	"description": "Weigh pro and con arguments in a Markdown table. Rendered as editable cards with weights and a result bar.",
 	"author": "haderlka",
 	"authorUrl": "https://github.com/haderlka",
 	"fundingUrl": "https://buymeacoffee.com/haderlka",

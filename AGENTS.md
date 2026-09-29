@@ -8,7 +8,7 @@ Guidance for AI coding agents (and humans) working on **Pro-Con Decisions**, an 
 
 ## What it does
 
-A `procon` fenced code block contains a Markdown table of weighted pro/contra arguments. The plugin renders the block as interactive cards (two columns plus a result bar). All editing happens in the rendered view and is written back into the table.
+A `procon` fenced code block contains a Markdown table of weighted pro/con arguments. The plugin renders the block as interactive cards (two columns plus a result bar). All editing happens in the rendered view and is written back into the table.
 
 ````markdown
 ```procon
@@ -74,8 +74,9 @@ Keep `model.ts` free of Obsidian and DOM dependencies so it stays unit-testable.
 ## Design decisions requested by the user (don't reintroduce)
 
 - **No** balance-scale graphic, **no** icon or heading at the top of the card.
-- Result area = **only** the green/red bar plus the legend line (`10 pro · 59%` … `41% · 7 contra`). No verdict text, no icon, no 50% marker line in the bar.
+- Result area = **only** the green/red bar plus the legend line (`10 pro · 59%` … `41% · 7 con`). No verdict text, no icon, no 50% marker line in the bar.
 - **No** drop shadow under the whole card.
+- Wording is **"con"**, never "contra" ("pros and cons" is the English idiom), in UI, docs and manifest. `contra` stays only as an accepted parser alias.
 - **No** animation when a new entry is added (Colored design). Other animations stay: intro fade, change flash, star pop, move slide, delete fade, bar/number transitions.
 - Two designs selectable in settings: **Colored** (default) and **Plain** (minimal color, *no* animations or transitions at all; the bar keeps muted green/red so it stays readable).
 - Must work on phones: controls always visible on `(hover: none)`, finger-sized targets, and on narrow containers (`@container (max-width: 480px)`) the text sits on its own line above stars and buttons.
