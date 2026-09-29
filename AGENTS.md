@@ -2,6 +2,10 @@
 
 Guidance for AI coding agents (and humans) working on **Pro/Con Decisions**, an Obsidian community plugin.
 
+- Repo: https://github.com/haderlka/obsidian-procon-decisions (author `haderlka`, default branch `main`)
+- Donations: `fundingUrl` in `manifest.json` → https://buymeacoffee.com/haderlka. Keep links out of the manifest `description`; the review wants a plain one-line description.
+- README images and links are **absolute** GitHub URLs, so they also work in Obsidian's plugin browser, which renders the README outside GitHub. Images come from `raw.githubusercontent.com/.../main/docs/`.
+
 ## What it does
 
 A `procon` fenced code block contains a Markdown table of weighted pro/contra arguments. The plugin renders the block as interactive cards (two columns plus a result bar). All editing happens in the rendered view and is written back into the table.

@@ -2,7 +2,9 @@
 
 Weigh the pros and cons of a decision right inside your notes. You write a plain Markdown table of arguments with weights. Obsidian shows it as editable cards and a bar that shows which side wins.
 
-![A decision rendered in a note: pro and contra columns with star weights and a green/red result bar](docs/colored-light.png)
+**Source code:** [github.com/haderlka/obsidian-procon-decisions](https://github.com/haderlka/obsidian-procon-decisions). Issues and ideas are welcome.
+
+![A decision rendered in a note: pro and contra columns with star weights and a green/red result bar](https://raw.githubusercontent.com/haderlka/obsidian-procon-decisions/main/docs/colored-light.png)
 
 ## Features
 
@@ -17,8 +19,8 @@ Weigh the pros and cons of a decision right inside your notes. You write a plain
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/colored-dark.png" alt="Colored design in the dark theme"></td>
-    <td width="50%"><img src="docs/plain-light.png" alt="Plain design with dots as the weight symbol"></td>
+    <td width="50%"><img src="https://raw.githubusercontent.com/haderlka/obsidian-procon-decisions/main/docs/colored-dark.png" alt="Colored design in the dark theme"></td>
+    <td width="50%"><img src="https://raw.githubusercontent.com/haderlka/obsidian-procon-decisions/main/docs/plain-light.png" alt="Plain design with dots as the weight symbol"></td>
   </tr>
   <tr>
     <td align="center"><em>Colored design, dark theme</em></td>
@@ -27,7 +29,7 @@ Weigh the pros and cons of a decision right inside your notes. You write a plain
 </table>
 
 <p align="center">
-  <img src="docs/mobile.png" alt="The same decision on a phone: stacked columns with always-visible touch controls" width="320"><br>
+  <img src="https://raw.githubusercontent.com/haderlka/obsidian-procon-decisions/main/docs/mobile.png" alt="The same decision on a phone: stacked columns with always-visible touch controls" width="320"><br>
   <em>On a phone: columns stack and the controls are always visible</em>
 </p>
 
@@ -96,7 +98,7 @@ Once the plugin is listed in the community plugin directory:
 
 Use this before the plugin is listed, or to install a specific version.
 
-1. Open the [latest release](../../releases/latest) of this repository.
+1. Open the [latest release](https://github.com/haderlka/obsidian-procon-decisions/releases/latest) of this repository.
 2. Under **Assets**, download these three files:
    - `main.js`
    - `manifest.json`
@@ -147,6 +149,12 @@ To try changes, link or copy the project folder into `<vault>/.obsidian/plugins/
 
 Tags have no `v` prefix: `1.0.1`, not `v1.0.1`.
 
+## Support
+
+If this plugin helps you make better decisions, you can support its development:
+
+<a href="https://buymeacoffee.com/haderlka"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy me a coffee" height="42"></a>
+
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/haderlka/obsidian-procon-decisions/blob/main/LICENSE)
