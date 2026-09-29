@@ -8,6 +8,7 @@ import {
 	Plugin,
 	PluginSettingTab,
 	Setting,
+	SettingDefinitionItem,
 	TFile,
 	setIcon,
 } from "obsidian";
@@ -617,18 +618,62 @@ function animateNumber(el: HTMLElement, from: number, to: number, duration = 700
 
 // ─── Settings tab ────────────────────────────────────────────────────────────
 
+const SETTING_TEXT = {
+	design: {
+		name: "Design",
+		desc: "Colored uses colors and animations; plain is a quiet look with minimal color and no animations.",
+	},
+	symbol: { name: "Weight symbol", desc: "How argument weights are drawn." },
+	maxWeight: {
+		name: "Maximum weight",
+		desc: "Number of symbols per argument. Higher weights in the file are capped to this.",
+	},
+};
+
 class ProConSettingTab extends PluginSettingTab {
 	constructor(app: App, private plugin: ProConPlugin) {
 		super(app, plugin);
 	}
 
+	/** Obsidian 1.13+: declarative settings, which also show up in the settings search. */
+	getSettingDefinitions(): SettingDefinitionItem[] {
+		return [
+			{
+				...SETTING_TEXT.design,
+				control: { type: "dropdown", key: "design", options: { ...DESIGNS } },
+			},
+			{
+				...SETTING_TEXT.symbol,
+				control: {
+					type: "dropdown",
+					key: "symbol",
+					options: Object.fromEntries(Object.entries(SYMBOLS).map(([key, s]) => [key, s.label])),
+				},
+			},
+			{
+				...SETTING_TEXT.maxWeight,
+				control: { type: "slider", key: "maxWeight", min: 3, max: 10, step: 1 },
+			},
+		];
+	}
+
+	getControlValue(key: string): unknown {
+		return this.plugin.settings[key as keyof ProConSettings];
+	}
+
+	async setControlValue(key: string, value: unknown) {
+		this.plugin.settings = { ...this.plugin.settings, [key]: value };
+		await this.plugin.saveSettings();
+	}
+
+	/** Obsidian before 1.13 renders the tab imperatively. Not called when getSettingDefinitions() is used. */
 	display() {
 		const { containerEl } = this;
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName("Design")
-			.setDesc("Colored uses colors and animations; plain is a quiet look with minimal color and no animations.")
+			.setName(SETTING_TEXT.design.name)
+			.setDesc(SETTING_TEXT.design.desc)
 			.addDropdown((dd) => {
 				for (const [key, label] of Object.entries(DESIGNS)) dd.addOption(key, label);
 				dd.setValue(this.plugin.settings.design).onChange(async (v) => {
@@ -638,8 +683,8 @@ class ProConSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Weight symbol")
-			.setDesc("How argument weights are drawn.")
+			.setName(SETTING_TEXT.symbol.name)
+			.setDesc(SETTING_TEXT.symbol.desc)
 			.addDropdown((dd) => {
 				for (const [key, s] of Object.entries(SYMBOLS)) dd.addOption(key, s.label);
 				dd.setValue(this.plugin.settings.symbol).onChange(async (v) => {
@@ -648,18 +693,21 @@ class ProConSettingTab extends PluginSettingTab {
 				});
 			});
 
-		new Setting(containerEl)
-			.setName("Maximum weight")
-			.setDesc("Number of symbols per argument. Higher weights in the file are capped to this.")
+		// Shows the slider value inline, like the declarative slider does on 1.13+.
+		let valueEl: HTMLElement | undefined;
+		const maxWeight = new Setting(containerEl)
+			.setName(SETTING_TEXT.maxWeight.name)
+			.setDesc(SETTING_TEXT.maxWeight.desc)
 			.addSlider((sl) =>
 				sl
 					.setLimits(3, 10, 1)
 					.setValue(this.plugin.settings.maxWeight)
-					.setDynamicTooltip()
 					.onChange(async (v) => {
+						if (valueEl) valueEl.textContent = String(v);
 						this.plugin.settings.maxWeight = v;
 						await this.plugin.saveSettings();
 					})
 			);
+		valueEl = maxWeight.controlEl.createSpan({ text: String(this.plugin.settings.maxWeight) });
 	}
 }

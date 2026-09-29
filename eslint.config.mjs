@@ -14,10 +14,5 @@ export default defineConfig([
 				tsconfigRootDir: import.meta.dirname,
 			},
 		},
-		rules: {
-			// The declarative settings API only exists from Obsidian 1.13. Adopting it would
-			// raise minAppVersion far above what the rest of the plugin needs (1.4.0).
-			"obsidianmd/settings-tab/prefer-setting-definitions": "off",
-		},
 	},
 ]);

@@ -25,10 +25,6 @@
 	white-space: normal;
 }
 
-.procon.is-intro {
-	animation: pc-rise 0.5s var(--pc-ease) both;
-}
-
 /* Live Preview wrapper: drop the code block chrome */
 .markdown-source-view.mod-cm6 .cm-embed-block.cm-lang-procon,
 .block-language-procon {
@@ -135,7 +131,6 @@
 	gap: 6px;
 	min-height: 8px;
 	border-radius: 10px;
-	transition: box-shadow 0.15s ease;
 }
 
 .procon-list.is-drop-end {
@@ -165,10 +160,6 @@
 	border: 1px solid rgba(var(--pc-side-rgb), 0.2);
 	border-left: 3px solid var(--pc-side);
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-	transition:
-		transform 0.2s var(--pc-ease),
-		box-shadow 0.2s var(--pc-ease),
-		opacity 0.2s ease;
 }
 
 @media (hover: hover) {
@@ -187,8 +178,7 @@
 	z-index: 10;
 	opacity: 0.92;
 	pointer-events: none;
-	transition: none;
-	transform: translate(var(--pc-drag-x, 0), var(--pc-drag-y, 0)) !important;
+	translate: var(--pc-drag-x, 0) var(--pc-drag-y, 0);
 	box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.35);
 }
 
@@ -215,7 +205,6 @@
 	cursor: grab;
 	touch-action: none; /* let a finger drag the card instead of scrolling the page */
 	opacity: 0;
-	transition: opacity 0.15s ease;
 }
 
 .procon-grip svg {
@@ -260,10 +249,6 @@
 	color: var(--pc-side);
 	opacity: 0.18;
 	filter: grayscale(1);
-	transition:
-		transform 0.18s var(--pc-spring),
-		opacity 0.18s ease,
-		filter 0.18s ease;
 }
 
 .procon:not(.is-readonly) .procon-sym {
@@ -338,9 +323,6 @@
 	opacity: 0;
 	pointer-events: none;
 	transform: translateY(4px) scale(0.95);
-	transition:
-		opacity 0.15s ease,
-		transform 0.15s ease;
 }
 
 .procon-item:hover .procon-actions,
@@ -423,10 +405,6 @@
 	border-radius: 10px;
 	border: 1px dashed rgba(var(--pc-side-rgb), 0.35);
 	color: var(--pc-side);
-	transition:
-		border-color 0.15s ease,
-		background-color 0.15s ease,
-		box-shadow 0.15s ease;
 }
 
 .procon-add:hover {
@@ -482,9 +460,6 @@
 	border-radius: 14px;
 	background: linear-gradient(135deg, rgba(var(--pc-v-rgb), 0.12), rgba(var(--pc-v-rgb), 0.03));
 	border: 1px solid rgba(var(--pc-v-rgb), 0.28);
-	transition:
-		background 0.4s ease,
-		border-color 0.4s ease;
 }
 
 .procon-verdict.is-strong-pro,
@@ -502,10 +477,6 @@
 .procon-verdict.is-empty {
 	--pc-v: var(--text-muted);
 	--pc-v-rgb: 128, 128, 128;
-}
-
-.procon-verdict.is-flipped {
-	animation: pc-verdict-flip 0.7s var(--pc-spring);
 }
 
 .procon-verdict-body {
@@ -526,7 +497,6 @@
 .procon-meter-pro,
 .procon-meter-con {
 	height: 100%;
-	transition: width 0.9s var(--pc-ease);
 }
 
 /* --pc-share (0–100) is set on .procon-meter from code */
@@ -570,37 +540,98 @@
 	font-weight: 700;
 }
 
-/* ── Animations ── */
-
-.procon.is-intro .procon-item {
-	animation: pc-rise 0.45s var(--pc-ease) both;
-	animation-delay: var(--pc-delay, 0ms);
-}
-
-.procon-item.is-changed {
-	animation: pc-flash 0.9s ease-out;
-}
-
-.procon-col-pro .procon-item.is-moved {
-	animation: pc-from-right 0.55s var(--pc-spring) both, pc-glow 1.2s ease-out 0.1s;
-}
-
-.procon-col-con .procon-item.is-moved {
-	animation: pc-from-left 0.55s var(--pc-spring) both, pc-glow 1.2s ease-out 0.1s;
-}
+/* ── Motion ──
+   Only the Colored design moves, and only without prefers-reduced-motion. Every
+   animation and transition lives here, so Plain and reduced motion need no overrides. */
 
 .procon-item.is-removing {
-	animation: pc-out 0.26s ease-in forwards;
 	pointer-events: none;
 }
 
-.procon-sym.is-pop {
-	animation: pc-sym-pop 0.5s var(--pc-spring) both;
-	animation-delay: var(--pc-delay, 0ms);
-}
+@media (prefers-reduced-motion: no-preference) {
+	.procon.is-intro:not(.is-plain) {
+		animation: pc-rise 0.5s var(--pc-ease) both;
+	}
 
-.procon-sym.is-drop {
-	animation: pc-sym-drop 0.4s ease-out;
+	.procon:not(.is-plain) .procon-list {
+		transition: box-shadow 0.15s ease;
+	}
+
+	.procon:not(.is-plain) .procon-item {
+		transition:
+			transform 0.2s var(--pc-ease),
+			box-shadow 0.2s var(--pc-ease),
+			opacity 0.2s ease;
+	}
+
+	.procon:not(.is-plain) .procon-grip {
+		transition: opacity 0.15s ease;
+	}
+
+	.procon:not(.is-plain) .procon-sym {
+		transition:
+			transform 0.18s var(--pc-spring),
+			opacity 0.18s ease,
+			filter 0.18s ease;
+	}
+
+	.procon:not(.is-plain) .procon-actions {
+		transition:
+			opacity 0.15s ease,
+			transform 0.15s ease;
+	}
+
+	.procon:not(.is-plain) .procon-add {
+		transition:
+			border-color 0.15s ease,
+			background-color 0.15s ease,
+			box-shadow 0.15s ease;
+	}
+
+	.procon:not(.is-plain) .procon-verdict {
+		transition:
+			background 0.4s ease,
+			border-color 0.4s ease;
+	}
+
+	.procon:not(.is-plain) .procon-meter-pro,
+	.procon:not(.is-plain) .procon-meter-con {
+		transition: width 0.9s var(--pc-ease);
+	}
+
+	.procon.is-intro:not(.is-plain) .procon-item {
+		animation: pc-rise 0.45s var(--pc-ease) both;
+		animation-delay: var(--pc-delay, 0ms);
+	}
+
+	.procon:not(.is-plain) .procon-item.is-changed {
+		animation: pc-flash 0.9s ease-out;
+	}
+
+	.procon:not(.is-plain) .procon-col-pro .procon-item.is-moved {
+		animation: pc-from-right 0.55s var(--pc-spring) both, pc-glow 1.2s ease-out 0.1s;
+	}
+
+	.procon:not(.is-plain) .procon-col-con .procon-item.is-moved {
+		animation: pc-from-left 0.55s var(--pc-spring) both, pc-glow 1.2s ease-out 0.1s;
+	}
+
+	.procon:not(.is-plain) .procon-item.is-removing {
+		animation: pc-out 0.26s ease-in forwards;
+	}
+
+	.procon:not(.is-plain) .procon-sym.is-pop {
+		animation: pc-sym-pop 0.5s var(--pc-spring) both;
+		animation-delay: var(--pc-delay, 0ms);
+	}
+
+	.procon:not(.is-plain) .procon-sym.is-drop {
+		animation: pc-sym-drop 0.4s ease-out;
+	}
+
+	.procon:not(.is-plain) .procon-verdict.is-flipped {
+		animation: pc-verdict-flip 0.7s var(--pc-spring);
+	}
 }
 
 @keyframes pc-rise {
@@ -707,37 +738,8 @@
 	}
 }
 
-@keyframes pc-wiggle {
-	0% {
-		transform: rotate(0) scale(0.6);
-	}
-	40% {
-		transform: rotate(-14deg) scale(1.25);
-	}
-	70% {
-		transform: rotate(8deg);
-	}
-	100% {
-		transform: none;
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.procon *,
-	.procon {
-		animation: none !important;
-		transition: none !important;
-	}
-}
-
 /* ───────────────────────── Plain design ───────────────────────── */
 /* Minimal color, no gradients, no shadows, no motion. */
-
-.procon.is-plain,
-.procon.is-plain * {
-	animation: none !important;
-	transition: none !important;
-}
 
 .procon.is-plain {
 	padding: 12px;

@@ -45,7 +45,7 @@ tools/screenshots/  Screenshot tool: Obsidian API shim + note-like page + headle
 docs/            README screenshots (generated, committed)
 manifest.json    id "procon-decisions". Keep version in sync via `npm version`
 versions.json    plugin version → minAppVersion
-.github/workflows  ci.yml (lint/test/build), release.yml (tag → draft release)
+.github/workflows  ci.yml (lint/test/build), release.yml (tag → attested draft release)
 ```
 
 Keep `model.ts` free of Obsidian and DOM dependencies so it stays unit-testable.
@@ -69,6 +69,7 @@ Keep `model.ts` free of Obsidian and DOM dependencies so it stays unit-testable.
 - **No inline styles.** The review (and `obsidianmd/no-static-styles-assignment`) wants CSS classes. Dynamic values go through `el.setCssProps({"--pc-…": value})` and CSS reads the variables (`--pc-share` for the bar, `--pc-delay` for staggered animations).
 - **Popout windows.** Use `window.requestAnimationFrame` / `window.setTimeout`, not the bare globals (lint rule `prefer-window-timers`).
 - **Settings** are validated on load (unknown `design`/`symbol`, or out-of-range `maxWeight`, fall back to defaults). `saveSettings()` re-renders every live block through the `renderers` set, so no reload is needed.
+- **Settings tab has two paths.** `getSettingDefinitions()` (Obsidian 1.13+, shows up in settings search) and `display()` as the fallback for older versions, which is never called when definitions are returned. Both share `SETTING_TEXT`, so keep them in sync. `setControlValue` goes through `saveSettings()` so blocks re-render. The `obsidian` dev dependency is 1.13.x for these types. That's fine with `minAppVersion` 1.4.0 as long as the code only *implements* new APIs and never *calls* them. `setDynamicTooltip` is deprecated and `no-deprecated` may not be disabled, so the fallback slider shows its value in a span.
 
 ## Design decisions requested by the user (don't reintroduce)
 
@@ -85,17 +86,18 @@ Keep `model.ts` free of Obsidian and DOM dependencies so it stays unit-testable.
 - Only Obsidian theme variables are used (`--background-*`, `--text-*`, `--color-green(-rgb)`, …), so light/dark themes work automatically.
 - Hover-only effects belong inside `@media (hover: hover)`. On touch, `:hover` sticks after a tap.
 - The Plain design is a block of `.procon.is-plain …` overrides at the end of `styles.css`.
-- Respect `prefers-reduced-motion` (already handled globally).
+- **No `!important`** (review warning). All `animation`/`transition` declarations live in the "Motion" block, gated by `@media (prefers-reduced-motion: no-preference)` and `.procon:not(.is-plain)`. Plain and reduced motion therefore need no overrides. Never put motion into base rules.
+- The dragged card moves via the individual `translate` property, not `transform`, so animations and hover transforms can't override it.
 
 ## Obsidian review checklist
 
-- `npm run lint` clean. `obsidianmd/settings-tab/prefer-setting-definitions` is disabled on purpose, because that API needs Obsidian 1.13 while `minAppVersion` is 1.4.0.
+- `npm run lint` clean. The review also checks things the local lint doesn't, such as `!important` in `styles.css`.
 - No `innerHTML`/`outerHTML`, no network requests, no Node/Electron APIs (`isDesktopOnly: false`).
 - `manifest.json` name: Basic Latin only, no punctuation except `-`, `+` and `()`, no "Obsidian" and no "Plugin". A `/` ("Pro/Con") was rejected by the directory, which is why the name is **Pro-Con Decisions**.
 - Command id/name must not contain the plugin id/name. No default hotkeys.
 - UI text in sentence case.
 - `manifest.json` description: short, ends with a period, doesn't start with "This plugin".
-- Releases: tag == manifest version, no `v` prefix (`.npmrc` sets `tag-version-prefix=""`). Assets: `main.js`, `manifest.json`, `styles.css`.
+- Releases: tag == manifest version, no `v` prefix (`.npmrc` sets `tag-version-prefix=""`). Assets: `main.js`, `manifest.json`, `styles.css`. `release.yml` signs them with `actions/attest@v4` (build-provenance attestations, which the review recommends). This needs the `id-token`, `attestations` and `artifact-metadata` permissions.
 - `main.js` is build output and is git-ignored.
 
 ## Testing UI changes without Obsidian
