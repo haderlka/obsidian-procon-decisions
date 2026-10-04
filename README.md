@@ -153,7 +153,7 @@ Tags have no `v` prefix: `1.0.1`, not `v1.0.1`.
 
 If this plugin helps you make better decisions, you can support its development:
 
-<a href="https://buymeacoffee.com/haderlka"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy me a coffee" height="42"></a>
+[![Buy me a coffee](https://raw.githubusercontent.com/haderlka/obsidian-procon-decisions/main/docs/buymeacoffee.png)](https://buymeacoffee.com/haderlka)
 
 ## License
 

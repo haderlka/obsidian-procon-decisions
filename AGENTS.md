@@ -5,6 +5,7 @@ Guidance for AI coding agents (and humans) working on **Pro-Con Decisions**, an 
 - Repo: https://github.com/haderlka/obsidian-procon-decisions (author `haderlka`, default branch `main`)
 - Donations: `fundingUrl` in `manifest.json` → https://buymeacoffee.com/haderlka. Keep links out of the manifest `description`; the review wants a plain one-line description.
 - README images and links are **absolute** GitHub URLs, so they also work in Obsidian's plugin browser, which renders the README outside GitHub. Images come from `raw.githubusercontent.com/.../main/docs/`.
+- **Host every README image in `docs/`.** The Obsidian community site (community.obsidian.md) silently dropped the Buy Me a Coffee button while it was loaded from `cdn.buymeacoffee.com`. Images from `raw.githubusercontent.com` render fine, in Markdown and HTML `<img>` alike. `docs/buymeacoffee.png` is the official button scaled to 42px height.
 
 ## What it does
 
