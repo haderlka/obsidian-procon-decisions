@@ -4,6 +4,10 @@ Weigh the pros and cons of a decision right inside your notes. You write a plain
 
 **Source code:** [github.com/haderlka/obsidian-procon-decisions](https://github.com/haderlka/obsidian-procon-decisions). Issues and ideas are welcome.
 
+If this plugin helps you make better decisions, you can support its development:
+
+[![Support this plugin](https://raw.githubusercontent.com/haderlka/obsidian-procon-decisions/main/docs/support-button.png)](https://buymeacoffee.com/haderlka)
+
 ![A decision rendered in a note: pro and con columns with star weights and a green/red result bar](https://raw.githubusercontent.com/haderlka/obsidian-procon-decisions/main/docs/colored-light.png)
 
 ## Features
@@ -148,12 +152,6 @@ To try changes, link or copy the project folder into `<vault>/.obsidian/plugins/
 3. The *Release* GitHub Action builds the plugin and creates a **draft** release with the three files. Review the draft on GitHub and publish it.
 
 Tags have no `v` prefix: `1.0.1`, not `v1.0.1`.
-
-## Support
-
-If this plugin helps you make better decisions, you can support its development:
-
-[![Buy me a coffee](https://raw.githubusercontent.com/haderlka/obsidian-procon-decisions/main/docs/buymeacoffee.png)](https://buymeacoffee.com/haderlka)
 
 ## License
 

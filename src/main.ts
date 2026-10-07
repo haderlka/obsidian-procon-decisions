@@ -545,6 +545,10 @@ class DecisionRenderer extends MarkdownRenderChild {
 			return;
 		}
 		if (focus) focusHints.set(this.key, focus);
+		// A focused star/button sits inside the editor's content, so the editor thinks it
+		// has focus and resets its cursor on the rewrite, which scrolls on phones.
+		const active = this.containerEl.ownerDocument.activeElement;
+		if (!focus && active && this.containerEl.contains(active)) (active as HTMLElement).blur();
 		scrollAnchors.set(this.key, this.containerEl.getBoundingClientRect().top);
 		const ok = await writeBlock(this.app, this.ctx, this.containerEl, text);
 		if (!ok) {
@@ -612,29 +616,43 @@ function whenConnected(el: HTMLElement, cb: () => void, tries = 120) {
 
 /**
  * Scrolls the nearest scroll container so `el` sits at viewport offset `top` again.
- * Keeps correcting for a moment, because the editor may still adjust the scroll
- * position after the block is attached. Stops as soon as the user scrolls.
+ * Corrects before the first paint after `el` is attached, then on every scroll event
+ * for a moment, so a jump is undone before it is drawn (a visible jump makes
+ * Obsidian mobile flash its toolbar). Stops as soon as the user scrolls.
  */
 function keepInView(el: HTMLElement, top: number, duration = 400) {
-	whenConnected(el, () => {
-		const scroller = scrollParent(el);
-		if (!scroller) return;
-		let stopped = false;
-		const stop = () => (stopped = true);
-		const opts = { once: true, passive: true };
-		scroller.addEventListener("wheel", stop, opts);
-		scroller.addEventListener("touchstart", stop, opts);
-		const end = performance.now() + duration;
-		let frames = 0;
-		const step = (now: number) => {
-			if (stopped || !el.isConnected) return;
-			const drift = el.getBoundingClientRect().top - top;
-			if (Math.abs(drift) > 1) scroller.scrollTop += drift;
-			// At least a few frames, in case frames are throttled
-			if (now < end || ++frames < 5) window.requestAnimationFrame(step);
-		};
-		step(performance.now());
-	});
+	let scroller: HTMLElement | null = null;
+	let end = 0;
+	let frames = 0;
+	const done = new AbortController();
+	const correct = () => {
+		if (!scroller || !el.isConnected) return;
+		const drift = el.getBoundingClientRect().top - top;
+		if (Math.abs(drift) > 1) scroller.scrollTop += drift;
+	};
+	const step = (now: number) => {
+		if (done.signal.aborted) return;
+		if (!scroller) {
+			// Not attached yet: check again next frame (still before that frame is painted)
+			if (!el.isConnected) {
+				if (++frames < 120) window.requestAnimationFrame(step);
+				return;
+			}
+			scroller = scrollParent(el);
+			if (!scroller) return;
+			const opts = { passive: true, signal: done.signal };
+			scroller.addEventListener("scroll", correct, opts);
+			scroller.addEventListener("wheel", () => done.abort(), opts);
+			scroller.addEventListener("touchstart", () => done.abort(), opts);
+			end = now + duration;
+			frames = 0;
+		}
+		correct();
+		// At least a few frames, in case frames are throttled
+		if (now < end || ++frames < 5) window.requestAnimationFrame(step);
+		else done.abort();
+	};
+	step(performance.now());
 }
 
 function scrollParent(el: HTMLElement): HTMLElement | null {
