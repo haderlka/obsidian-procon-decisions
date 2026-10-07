@@ -1,7 +1,7 @@
 {
 	"id": "procon-decisions",
 	"name": "Pro-Con Decisions",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"minAppVersion": "1.4.0",
 	"description": "Weigh pro and con arguments in a Markdown table. Rendered as editable cards with weights and a result bar.",
 	"author": "haderlka",
