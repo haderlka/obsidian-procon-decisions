@@ -77,6 +77,9 @@ interface Snapshot {
 }
 const memory = new Map<string, Snapshot>();
 const focusHints = new Map<string, { side: Side }>();
+// Viewport position of the block before a write, so the re-rendered block can be put
+// back there. Otherwise the scroll position jumps while the block is rebuilt (phones).
+const scrollAnchors = new Map<string, number>();
 
 // ─── Plugin ──────────────────────────────────────────────────────────────────
 
@@ -108,6 +111,7 @@ export default class ProConPlugin extends Plugin {
 	onunload() {
 		memory.clear();
 		focusHints.clear();
+		scrollAnchors.clear();
 	}
 
 	async loadSettings() {
@@ -193,6 +197,12 @@ class DecisionRenderer extends MarkdownRenderChild {
 		this.renderVerdict(root, t, verdict, prev);
 
 		memory.set(this.key, { entries: d.entries.map((e) => ({ ...e })), tally: t, verdict });
+
+		const anchor = scrollAnchors.get(this.key);
+		if (anchor !== undefined) {
+			scrollAnchors.delete(this.key);
+			keepInView(el, anchor);
+		}
 
 		const hint = focusHints.get(this.key);
 		if (hint) {
@@ -535,9 +545,11 @@ class DecisionRenderer extends MarkdownRenderChild {
 			return;
 		}
 		if (focus) focusHints.set(this.key, focus);
+		scrollAnchors.set(this.key, this.containerEl.getBoundingClientRect().top);
 		const ok = await writeBlock(this.app, this.ctx, this.containerEl, text);
 		if (!ok) {
 			focusHints.delete(this.key);
+			scrollAnchors.delete(this.key);
 			new Notice("Couldn't find this decision in the file. Please edit it in source mode.");
 		}
 	}
@@ -596,6 +608,41 @@ function whenConnected(el: HTMLElement, cb: () => void, tries = 120) {
 	} else {
 		cb();
 	}
+}
+
+/**
+ * Scrolls the nearest scroll container so `el` sits at viewport offset `top` again.
+ * Keeps correcting for a moment, because the editor may still adjust the scroll
+ * position after the block is attached. Stops as soon as the user scrolls.
+ */
+function keepInView(el: HTMLElement, top: number, duration = 400) {
+	whenConnected(el, () => {
+		const scroller = scrollParent(el);
+		if (!scroller) return;
+		let stopped = false;
+		const stop = () => (stopped = true);
+		const opts = { once: true, passive: true };
+		scroller.addEventListener("wheel", stop, opts);
+		scroller.addEventListener("touchstart", stop, opts);
+		const end = performance.now() + duration;
+		let frames = 0;
+		const step = (now: number) => {
+			if (stopped || !el.isConnected) return;
+			const drift = el.getBoundingClientRect().top - top;
+			if (Math.abs(drift) > 1) scroller.scrollTop += drift;
+			// At least a few frames, in case frames are throttled
+			if (now < end || ++frames < 5) window.requestAnimationFrame(step);
+		};
+		step(performance.now());
+	});
+}
+
+function scrollParent(el: HTMLElement): HTMLElement | null {
+	for (let p = el.parentElement; p; p = p.parentElement) {
+		const { overflowY } = getComputedStyle(p);
+		if ((overflowY === "auto" || overflowY === "scroll") && p.scrollHeight > p.clientHeight) return p;
+	}
+	return (el.ownerDocument.scrollingElement as HTMLElement | null) ?? null;
 }
 
 function animateNumber(el: HTMLElement, from: number, to: number, duration = 700) {

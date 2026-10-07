@@ -65,6 +65,7 @@ Keep `model.ts` free of Obsidian and DOM dependencies so it stays unit-testable.
   - Focus after adding an entry is restored through `focusHints`, so the user can keep typing.
   - Transitions (bar width, count-up numbers) start from the previous values. `whenConnected()` waits until the element is in the DOM before changing values, because the processor runs before the element is attached and a transition would not fire.
   - Removal animates *before* writing (`is-removing`, then commit after 260 ms).
+  - Scroll position: `commit` stores the block's viewport offset in `scrollAnchors`. After the re-render, `keepInView` scrolls the nearest scroll container so the block sits there again. It keeps correcting for about 400 ms (and at least 5 frames), and stops early if the user scrolls. Without this, a star or delete tap on a phone jumped the view to the end of the Con list or to the top of the block.
 - **Live Preview event isolation.** `isolateEvents()` stops propagation of mouse, pointer, touch, key and input events at the card root. Without this, CodeMirror moves the cursor into the block and swaps the widget for raw source. Don't remove events from that list without testing in Live Preview.
 - **Dragging uses Pointer Events, not HTML5 drag-and-drop.** HTML5 DnD does not work on touch devices. The grip has `touch-action: none` so a finger drags instead of scrolling. The card follows the pointer via CSS variables `--pc-drag-x/y`.
 - **No inline styles.** The review (and `obsidianmd/no-static-styles-assignment`) wants CSS classes. Dynamic values go through `el.setCssProps({"--pc-…": value})` and CSS reads the variables (`--pc-share` for the bar, `--pc-delay` for staggered animations).
@@ -77,6 +78,7 @@ Keep `model.ts` free of Obsidian and DOM dependencies so it stays unit-testable.
 - **No** balance-scale graphic, **no** icon or heading at the top of the card.
 - Result area = **only** the green/red bar plus the legend line (`10 pro · 59%` … `41% · 7 con`). No verdict text, no icon, no 50% marker line in the bar.
 - **No** drop shadow under the whole card.
+- Card glows (Colored): green top-left, red top-right side by side. When the columns stack (`@container (max-width: 560px)`), red moves to the **bottom** behind Con, so it doesn't bleed into Pro. The glows live on `.procon:not(.is-plain)::before`, because only the container's own pseudo-element can react to its width. `.procon` has `isolation: isolate` so the `z-index: -1` glow stays inside the card.
 - Wording is **"con"**, never "contra" ("pros and cons" is the English idiom), in UI, docs and manifest. `contra` stays only as an accepted parser alias.
 - **No** animation when a new entry is added (Colored design). Other animations stay: intro fade, change flash, star pop, move slide, delete fade, bar/number transitions.
 - Two designs selectable in settings: **Colored** (default) and **Plain** (minimal color, *no* animations or transitions at all; the bar keeps muted green/red so it stays readable).

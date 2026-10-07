@@ -15,14 +15,35 @@
 	padding: 18px 18px 16px;
 	border: 1px solid var(--background-modifier-border);
 	border-radius: var(--pc-radius);
-	background:
-		radial-gradient(90% 70% at 0% 0%, rgba(var(--pc-pro-rgb), 0.08), transparent 65%),
-		radial-gradient(90% 70% at 100% 0%, rgba(var(--pc-con-rgb), 0.08), transparent 65%),
-		var(--background-primary);
+	background: var(--background-primary);
+	isolation: isolate;
 	font-size: var(--font-text-size);
 	line-height: 1.4;
 	text-align: left;
 	white-space: normal;
+}
+
+/* Soft side glows behind the columns. A pseudo-element, because only descendants
+   (and the container's own pseudo-elements) can react to the container width. */
+.procon:not(.is-plain)::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	border-radius: inherit;
+	pointer-events: none;
+	background:
+		radial-gradient(90% 70% at 0% 0%, rgba(var(--pc-pro-rgb), 0.08), transparent 65%),
+		radial-gradient(90% 70% at 100% 0%, rgba(var(--pc-con-rgb), 0.08), transparent 65%);
+}
+
+/* Stacked columns: the red glow sits behind Con (bottom), not behind Pro */
+@container (max-width: 560px) {
+	.procon:not(.is-plain)::before {
+		background:
+			radial-gradient(100% 45% at 0% 0%, rgba(var(--pc-pro-rgb), 0.08), transparent 65%),
+			radial-gradient(100% 45% at 100% 100%, rgba(var(--pc-con-rgb), 0.08), transparent 65%);
+	}
 }
 
 /* Live Preview wrapper: drop the code block chrome */
@@ -744,7 +765,6 @@
 .procon.is-plain {
 	padding: 12px;
 	border-radius: 8px;
-	background: var(--background-primary);
 }
 
 .procon.is-plain .procon-col {
